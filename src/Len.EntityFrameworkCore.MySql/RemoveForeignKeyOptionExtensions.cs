@@ -1,9 +1,15 @@
-﻿namespace Len.EntityFrameworkCore.MySql;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace Len.EntityFrameworkCore.MySql;
 
 public static class RemoveForeignKeyOptionExtensions
 {
-    public static void MySql(this RemoveForeignKeyOptions options)
+    public static MySqlDbContextOptionsBuilder RemoveForeignKey(this MySqlDbContextOptionsBuilder options)
     {
-        options.MigrationsSqlGeneratorType = typeof(MigrationsSqlGenerator);
+        var builder = ((IRelationalDbContextOptionsBuilderInfrastructure)options).OptionsBuilder;
+        builder.ReplaceService<IMigrationsSqlGenerator, MigrationsSqlGenerator>();
+
+        return options;
     }
 }

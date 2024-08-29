@@ -1,9 +1,15 @@
-﻿namespace Len.EntityFrameworkCore.SqlServer;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace Len.EntityFrameworkCore.SqlServer;
 
 public static class RemoveForeignKeyOptionExtensions
 {
-    public static void SqlServer(this RemoveForeignKeyOptions options)
+    public static SqlServerDbContextOptionsBuilder RemoveForeignKey(this SqlServerDbContextOptionsBuilder options)
     {
-        options.MigrationsSqlGeneratorType = typeof(MigrationsSqlGenerator);
+        var builder = ((IRelationalDbContextOptionsBuilderInfrastructure)options).OptionsBuilder;
+        builder.ReplaceService<IMigrationsSqlGenerator, MigrationsSqlGenerator>();
+
+        return options;
     }
 }

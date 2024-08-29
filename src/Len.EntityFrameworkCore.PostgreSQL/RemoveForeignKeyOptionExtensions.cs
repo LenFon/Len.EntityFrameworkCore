@@ -1,9 +1,16 @@
-﻿namespace Len.EntityFrameworkCore.PostgreSQL;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
+
+namespace Len.EntityFrameworkCore.PostgreSQL;
 
 public static class RemoveForeignKeyOptionExtensions
 {
-    public static void Npgsql(this RemoveForeignKeyOptions options)
+    public static NpgsqlDbContextOptionsBuilder RemoveForeignKey(this NpgsqlDbContextOptionsBuilder options)
     {
-        options.MigrationsSqlGeneratorType = typeof(MigrationsSqlGenerator);
+        var builder = ((IRelationalDbContextOptionsBuilderInfrastructure)options).OptionsBuilder;
+        builder.ReplaceService<IMigrationsSqlGenerator, MigrationsSqlGenerator>();
+
+        return options;
     }
 }
